@@ -12,16 +12,16 @@ f:
 	.cfi_offset 6, -16
 	mov	rbp, rsp
 	.cfi_def_cfa_register 6
-	movsd	QWORD PTR -8[rbp], xmm0
-	movsd	QWORD PTR -16[rbp], xmm1
-	movsd	QWORD PTR -24[rbp], xmm2
-	movsd	xmm0, QWORD PTR -24[rbp]
-	mulsd	xmm0, QWORD PTR -8[rbp]
-	mulsd	xmm0, QWORD PTR -8[rbp]
-	mulsd	xmm0, QWORD PTR -8[rbp]
-	addsd	xmm0, QWORD PTR -16[rbp]
+	movsd	QWORD PTR -8[rbp], xmm0         # x
+	movsd	QWORD PTR -16[rbp], xmm1        # a
+	movsd	QWORD PTR -24[rbp], xmm2        # b
+	movsd	xmm0, QWORD PTR -24[rbp]        # * b
+	mulsd	xmm0, QWORD PTR -8[rbp]         # * x
+	mulsd	xmm0, QWORD PTR -8[rbp]         # * x
+	mulsd	xmm0, QWORD PTR -8[rbp]         # * x
+	addsd	xmm0, QWORD PTR -16[rbp]        # + a
 	movq	rax, xmm0
-	movq	xmm0, rax
+	movq	xmm0, rax                       # return
 	pop	rbp
 	.cfi_def_cfa 7, 8
 	ret
@@ -52,74 +52,74 @@ main:
 	mov	QWORD PTR -8[rbp], rax
 	xor	eax, eax
 	pxor	xmm0, xmm0
-	movsd	QWORD PTR -32[rbp], xmm0
-	lea	rax, -48[rbp]
+	movsd	QWORD PTR -32[rbp], xmm0            # res = 0.0
+	lea	rax, -48[rbp]                           # a
 	mov	rsi, rax
 	lea	rax, .LC1[rip]
 	mov	rdi, rax
 	mov	eax, 0
 	call	__isoc99_scanf@PLT
-	lea	rax, -40[rbp]
+	lea	rax, -40[rbp]                           # b
 	mov	rsi, rax
 	lea	rax, .LC1[rip]
 	mov	rdi, rax
 	mov	eax, 0
 	call	__isoc99_scanf@PLT
-	lea	rax, -64[rbp]
+	lea	rax, -64[rbp]                           # l
 	mov	rsi, rax
 	lea	rax, .LC1[rip]
 	mov	rdi, rax
 	mov	eax, 0
 	call	__isoc99_scanf@PLT
-	lea	rax, -56[rbp]
+	lea	rax, -56[rbp]                           # r
 	mov	rsi, rax
 	lea	rax, .LC1[rip]
 	mov	rdi, rax
 	mov	eax, 0
 	call	__isoc99_scanf@PLT
-	lea	rax, -68[rbp]
+	lea	rax, -68[rbp]                           # n
 	mov	rsi, rax
 	lea	rax, .LC2[rip]
 	mov	rdi, rax
 	mov	eax, 0
 	call	__isoc99_scanf@PLT
-	movsd	xmm0, QWORD PTR -56[rbp]
-	movsd	xmm1, QWORD PTR -64[rbp]
-	subsd	xmm0, xmm1
-	mov	eax, DWORD PTR -68[rbp]
+	movsd	xmm0, QWORD PTR -56[rbp]            # r
+	movsd	xmm1, QWORD PTR -64[rbp]            # l
+	subsd	xmm0, xmm1                          # r - l
+	mov	eax, DWORD PTR -68[rbp]                 # n
 	pxor	xmm1, xmm1
 	cvtsi2sd	xmm1, eax
-	divsd	xmm0, xmm1
-	movsd	QWORD PTR -16[rbp], xmm0
+	divsd	xmm0, xmm1                          # (r - l) / n
+	movsd	QWORD PTR -16[rbp], xmm0            # h
 	movsd	xmm0, QWORD PTR -64[rbp]
-	movsd	QWORD PTR -24[rbp], xmm0
+	movsd	QWORD PTR -24[rbp], xmm0            # x = l
 	jmp	.L4
 .L5:
-	movsd	xmm4, QWORD PTR -40[rbp]
-	movsd	xmm3, QWORD PTR -48[rbp]
-	movsd	xmm0, QWORD PTR -16[rbp]
+	movsd	xmm4, QWORD PTR -40[rbp]            # b
+	movsd	xmm3, QWORD PTR -48[rbp]            # a
+	movsd	xmm0, QWORD PTR -16[rbp]            # h
 	movsd	xmm2, QWORD PTR .LC3[rip]
 	movapd	xmm1, xmm0
-	divsd	xmm1, xmm2
-	movsd	xmm0, QWORD PTR -24[rbp]
-	subsd	xmm0, xmm1
+	divsd	xmm1, xmm2                          # h / 2
+	movsd	xmm0, QWORD PTR -24[rbp]            # x
+	subsd	xmm0, xmm1                          # x - h / 2
 	movq	rax, xmm0
 	movapd	xmm2, xmm4
 	movapd	xmm1, xmm3
 	movq	xmm0, rax
 	call	f
 	movsd	xmm1, QWORD PTR -32[rbp]
-	addsd	xmm0, xmm1
+	addsd	xmm0, xmm1                          # (result) f + res
 	movsd	QWORD PTR -32[rbp], xmm0
 	movsd	xmm0, QWORD PTR -24[rbp]
-	addsd	xmm0, QWORD PTR -16[rbp]
+	addsd	xmm0, QWORD PTR -16[rbp]            # x + h
 	movsd	QWORD PTR -24[rbp], xmm0
 .L4:
-	movsd	xmm0, QWORD PTR -56[rbp]
-	comisd	xmm0, QWORD PTR -24[rbp]
+	movsd	xmm0, QWORD PTR -56[rbp]           # r
+	comisd	xmm0, QWORD PTR -24[rbp]           # x <= r
 	jnb	.L5
 	movsd	xmm0, QWORD PTR -32[rbp]
-	mulsd	xmm0, QWORD PTR -16[rbp]
+	mulsd	xmm0, QWORD PTR -16[rbp]           # res * h
 	movsd	QWORD PTR -32[rbp], xmm0
 	mov	rax, QWORD PTR -32[rbp]
 	movq	xmm0, rax
