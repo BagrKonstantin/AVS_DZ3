@@ -14,7 +14,7 @@ int main() {
     scanf( "%lf", &r );
     scanf("%d", &n);
 
-    double h = double((r - l) / n);
+    double h = (r - l) / n;
     for (double x = l; x <= r; x += h) {
         res += f(x - h / 2, a, b);
     }
