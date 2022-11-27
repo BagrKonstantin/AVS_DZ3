@@ -10,7 +10,7 @@ f:
 	movsd	QWORD PTR -8[rbp], xmm0             # x
 	movsd	QWORD PTR -16[rbp], xmm1            # a
 	movsd	QWORD PTR -24[rbp], xmm2            # b
-	movsd	xmm0, QWORD PTR -24[rbp]            # * b
+	movsd	xmm0, QWORD PTR -24[rbp]            # b
 	mulsd	xmm0, QWORD PTR -8[rbp]             # * x
 	mulsd	xmm0, QWORD PTR -8[rbp]             # * x
 	mulsd	xmm0, QWORD PTR -8[rbp]             # * x
